@@ -19,7 +19,7 @@ The goal of these endpoints is to be simple, well-documented and to provide a ba
 2. Run the command `pytest tests`
 3. If you delete the fixtures, or decide to add some of your own, you’ll have to re-generate them, and the way this is done is by running the app, getting an auth_token from the main page of the app. Paste that token in place of the test_auth_token at the top of the test_endpoints.py file, then run the tests.
 
-The Postman collection with all the endpoints can be freely downloaded using the following button: [Run in Postman](https://github.com/username/project/tests)
+The Postman collection with all the endpoints can be freely downloaded using the following button: [Run in Postman](https://api.postman.com/collections/23428387-411e9ac6-fb5e-4e5c-9ff9-eb5fa4141d40?access_key=PMAT-01H2RQS5P6JKTT1VSX2N6T7CHF)
 
 ## Open source licensing info
 
