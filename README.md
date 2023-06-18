@@ -8,9 +8,9 @@ The goal of these endpoints is to be simple, well-documented and to provide a ba
 1. Run `docker build -t docker-mysql .` to build a Docker image using the dockerfile in the current directory
 2. Run `docker run -p 3306:3306 --name mysql-container -e MYSQL_ROOT_PASSWORD=1234 -d docker-mysql` to run a Docker container from the specified image
 3. Run `docker exec -it mysql-container mysql -uroot -p1234` to lauch the MySQL client inside the container
-4. Run `CREATE DATABASE music` to create a new database named `music`
-5. Run `pip install requirements.txt` to install dependencies
-6. Run python main.py
+4. Run `CREATE DATABASE music;` to create a new database named `music`
+5. Run `pip install -r requirements.txt` to install dependencies
+6. Run `python main.py` to start the API
 7. Navigate to http://localhost:5000 in your browser
 
 ## How to test the software
