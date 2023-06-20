@@ -1,33 +1,20 @@
 
 from flask import Flask, request, jsonify
-from sqlalchemy import create_engine, Column, Integer, String, DECIMAL, TIMESTAMP
-from sqlalchemy.orm import sessionmaker
-from sqlalchemy.ext.declarative import declarative_base
+from src.domain.entities.plans import Plan
+from src.infra.configs.db_config import DBConnectionHandler
 from datetime import datetime
+from src.infra.configs.db_base import Base
 
 app = Flask(__name__)
-Base = declarative_base()
 
-#modelo do plano, poderia ser uma classe, poderia mas n to a fim
+db = DBConnectionHandler()
+db.__enter__();
+Base.metadata.create_all(db.get_engine())
 
-class Plan(Base):
-    __tablename__ = 'plans'
-    id = Column(Integer, primary_key=True)
-    description = Column(String(45), nullable=False)
-    value = Column(DECIMAL(5, 2), nullable=False)
-    limit = Column(Integer, nullable=False)
-    created = Column(TIMESTAMP, nullable=False)
-    modified = Column(TIMESTAMP, nullable=False, default=datetime.now)
-
-#cria sessão com o banco, informações meramente ilustrativas, explicado com o rodar o banco na docker file
-engine = create_engine('mysql://root:1234@localhost:3306/musicas')
-Base.metadata.create_all(engine)
-
-Session = sessionmaker(bind=engine)
 
 @app.route('/plans', methods=['GET'])
 def get_all_plans():
-    session = Session()
+    session = db.session
     plans = session.query(Plan).all()
     session.close()
     return jsonify([{
@@ -35,7 +22,7 @@ def get_all_plans():
         'description': plan.description,
         'value': plan.value,
         'limit': plan.limit,
-        'created': plan.created.strftime('%Y-%m-%d %H:%M:%S')
+        'created_at': plan.created_at.strftime('%Y-%m-%d %H:%M:%S')
     } for plan in plans])
 
 
@@ -45,9 +32,9 @@ def add_plan():
     description = data['description']
     value = data['value']
     limit = data['limit']
-    created = datetime.now()
-    session = Session()
-    plan = Plan(description=description, value=value, limit=limit, created=created)
+    created_at = datetime.now()
+    session = db.session
+    plan = Plan(description=description, value=value, limit=limit, created_at=created_at)
     session.add(plan)
     session.commit()
     plan_id = plan.id
@@ -57,12 +44,12 @@ def add_plan():
         'description': description,
         'value': value,
         'limit': limit,
-        'created': created.strftime('%Y-%m-%d %H:%M:%S')
+        'created_at': created_at.strftime('%Y-%m-%d %H:%M:%S')
     }), 201
 
 @app.route('/plans/<int:id>', methods=['GET'])
 def get_plan(id):
-    session = Session()
+    session = db.session
     plan = session.query(Plan).get(id)
     session.close()
     if plan:
@@ -71,8 +58,8 @@ def get_plan(id):
             'description': plan.description,
             'value': plan.value,
             'limit': plan.limit,
-            'created': plan.created,
-            'modified': plan.modified
+            'created_at': plan.created_at,
+            'modified_at': plan.modified_at
         })
     else:
         return jsonify({'error': 'Plan not found'}), 404
@@ -84,7 +71,7 @@ def update_plan(id):
     value = data.get('value')
     limit = data.get('limit')
 
-    session = Session()
+    session = db.session
     plan = session.query(Plan).get(id)
 
     if not plan:
@@ -97,7 +84,7 @@ def update_plan(id):
     if limit:
         plan.limit = limit
 
-    plan.modified = datetime.now()
+    plan.modified_at = datetime.now()
     session.commit()
     session.close()
 
@@ -105,7 +92,7 @@ def update_plan(id):
 
 @app.route('/plans/<int:id>', methods=['DELETE'])
 def delete_plan(id):
-    session = Session()
+    session = db.session
     plan = session.query(Plan).get(id)
 
     if not plan:
