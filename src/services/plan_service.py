@@ -1,4 +1,4 @@
-from src.domain.entities.plans import Plan
+from domain.entities.plan import Plan
 from datetime import datetime
 from flask import request, jsonify
 
