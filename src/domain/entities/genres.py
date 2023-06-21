@@ -4,7 +4,7 @@ from datetime import datetime
 
 
 class Genre(Base):
-    __tablename__ = 'plans'
+    __tablename__ = 'genres'
     id = Column(Integer, primary_key=True)
     description = Column(String(45), nullable=False)
     created_at = Column(TIMESTAMP, nullable=False)
