@@ -14,7 +14,7 @@ The goal of these endpoints is to be simple, well-documented and to provide a ba
    - On Unix or MacOS, using the bash shell: `source .venv/bin/activate`
    - On Windows using PowerShell: `.venv\Scripts\Activate.ps1`
 7. Run `pip install -r requirements.txt` to install dependencies
-8. Run `python main.py` to start the API
+8. Run `python src/main.py` to start the API
 9. Navigate to http://localhost:5000 in your browser
 
 ## How to test the software
