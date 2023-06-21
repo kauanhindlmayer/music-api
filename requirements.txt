@@ -1,3 +1,4 @@
 Flask==2.0.2
 SQLAlchemy==1.4.25
 mysql
+PyMySQL==1.0.3

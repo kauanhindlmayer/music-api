@@ -6,7 +6,7 @@ class DBConnectionHandler:
     """SQLAlchemy database connection"""
 
     def __init__(self):
-        self.__connection_string = "mysql://root:1234@localhost:3306/music"
+        self.__connection_string = "mysql+pymysql://root:1234@localhost:3306/music"
         self.session = None
 
     def get_engine(self):
