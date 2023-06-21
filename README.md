@@ -11,8 +11,10 @@ The goal of these endpoints is to be simple, well-documented and to provide a ba
 4. Run `CREATE DATABASE music;` to create a new database named `music`
 5. Run `python -m venv .venv` to create the virtual enviroment
 6. Run the following commands to activate the virtual enviroment depending on which operating system and command shell you're using:
+
 - On Unix or MacOS, using the bash shell: `source .venv/bin/activate`
-- Windows using PowerShell: `.venv\Scripts\Activate.ps1`
+- On Windows using PowerShell: `.venv\Scripts\Activate.ps1`
+
 7. Run `pip install -r requirements.txt` to install dependencies
 8. Run `python main.py` to start the API
 9. Navigate to http://localhost:5000 in your browser
