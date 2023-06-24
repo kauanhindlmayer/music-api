@@ -1,11 +1,11 @@
 from infra.configs.db_base import Base
-from sqlalchemy import Column, Integer, String, TIMESTAMP
+from sqlalchemy import Column, Integer, String, TIMESTAMP, ForeignKey
 from datetime import datetime
 
-
-class Genre(Base):
-    __tablename__ = 'genres'
+class Payment(Base):
+    __tablename__ = 'payments'
     id = Column(Integer, primary_key=True)
-    description = Column(String(45), nullable=False)
+    payment_date = Column(TIMESTAMP, nullable=False)
     created_at = Column(TIMESTAMP, nullable=False, default=datetime.now)
     modified_at = Column(TIMESTAMP, nullable=False)
+ 
