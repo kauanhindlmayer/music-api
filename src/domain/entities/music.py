@@ -1,5 +1,6 @@
 from infra.configs.db_base import Base
 from sqlalchemy import Column, Integer, String, TIMESTAMP, ForeignKey
+from sqlalchemy.orm import relationship
 from datetime import datetime
 
 class Music(Base):
@@ -11,4 +12,6 @@ class Music(Base):
     release_date = Column(TIMESTAMP, nullable=False)
     created_at = Column(TIMESTAMP, nullable=False, default=datetime.now)
     modified_at = Column(TIMESTAMP, nullable=False)
- 
+    artist = relationship("Artist", back_populates="Music")
+    genre = relationship("Genre", back_populates="Music")
+    customer = relationship("Customer", back_populates="Music")

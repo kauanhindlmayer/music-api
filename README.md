@@ -1,6 +1,6 @@
 # Music API
 
-**Description**: This is a simple Python/Flask application intended to provide a way to manage musics, genres, artists, labels, customers, and plans.
+**Description**: This is a simple Python/Flask application intended to provide a way to manage musics, genres, artists, labels, customers, and subscriptions.
 The goal of these endpoints is to be simple, well-documented and to provide a base for developers to develop other applications off of.
 
 ## Installation

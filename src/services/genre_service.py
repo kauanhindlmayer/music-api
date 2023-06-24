@@ -44,7 +44,7 @@ class GenreService:
                 'updated_at': genre.updated_at
             })
         else:
-            return jsonify({'error': 'Plan not found'}), 404
+            return jsonify({'error': 'Subscription not found'}), 404
         
     def update(self, id):
         data = request.get_json()
@@ -53,7 +53,7 @@ class GenreService:
         genre = self.session.query(Genre).get(id)
 
         if not genre:
-            return jsonify({'error': 'Plan not found'}), 404
+            return jsonify({'error': 'Subscription not found'}), 404
 
         genre.description = description
 
@@ -61,16 +61,16 @@ class GenreService:
         self.session.commit()
         self.session.close()
 
-        return jsonify({'message': 'Plan updated successfully'})
+        return jsonify({'message': 'Subscription updated successfully'})
     
     def delete(self, id):
         genre = self.session.query(Genre).get(id)
 
         if not genre:
-            return jsonify({'error': 'Plan not found'}), 404
+            return jsonify({'error': 'Subscription not found'}), 404
 
         self.session.delete(genre)
         self.session.commit()
         self.session.close()
 
-        return jsonify({'message': 'Plan deleted successfully'})
+        return jsonify({'message': 'Subscription deleted successfully'})
