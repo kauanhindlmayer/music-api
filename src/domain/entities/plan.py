@@ -8,5 +8,5 @@ class Plan(Base):
     description = Column(String(45), nullable=False)
     value = Column(DECIMAL(5, 2), nullable=False)
     limit = Column(Integer, nullable=False)
-    created_at = Column(TIMESTAMP, nullable=False)
-    modified_at = Column(TIMESTAMP, nullable=False, default=datetime.now)
+    created_at = Column(TIMESTAMP, nullable=False, default=datetime.now)
+    modified_at = Column(TIMESTAMP, nullable=False)
