@@ -1,9 +1,9 @@
-
 from flask import Flask
 from infra.configs.db_config import DBConnectionHandler
 from infra.configs.db_base import Base
 from services.plan_service import PlanService
 from services.genre_service import GenreService
+from services.record_label_service import RecordLabelService
 
 app = Flask(__name__)
 
@@ -12,6 +12,7 @@ database.__enter__();
 Base.metadata.create_all(database.get_engine())
 plan_service = PlanService(database)
 genre_service = GenreService(database)
+record_label_service = RecordLabelService(database)
 
 @app.route('/plans', methods=['GET'])
 def get_all_plans(): 
@@ -52,6 +53,18 @@ def update_genre(id):
 @app.route('/genres/<int:id>', methods=['DELETE'])
 def delete_genre(id):
     return genre_service.delete(id)
+
+@app.route('/record-labels', methods=['GET'])
+def get_record_labels():
+    return record_label_service.get_all()
+
+@app.route('/record-labels', methods=['POST'])
+def add_record_label():
+    return record_label_service.add()
+
+@app.route('/record-labels/<int:id>', methods=['GET'])
+def delete_record_labels(id):
+    return record_label_service.get_by_id(id)
 
 if __name__ == '__main__':
     app.run()
