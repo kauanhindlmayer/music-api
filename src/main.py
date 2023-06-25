@@ -63,8 +63,16 @@ def add_record_label():
     return record_label_service.add()
 
 @app.route('/record-labels/<int:id>', methods=['GET'])
-def delete_record_labels(id):
+def get_record_labels_by_id(id):
     return record_label_service.get_by_id(id)
+
+@app.route('/record-labels/<int:id>', methods=['PUT'])
+def update_record_labels(id):
+    return record_label_service.update(id)
+
+@app.route('/record-labels/<int:id>', methods=['DELETE'])
+def delete_record_labels(id):
+    return record_label_service.delete(id)
 
 if __name__ == '__main__':
     app.run()

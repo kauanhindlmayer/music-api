@@ -1,12 +1,7 @@
-from sqlalchemy import except_
-from sqlalchemy.engine import create
-from domain.entities.plan import Plan
 from datetime import datetime
 from flask import request, jsonify
 from typing import List
 from domain.entities.record_label import RecordLabel, record_label_to_json
-
-ok_validate_message = "ok"
 
 class RecordLabelService:
     def __init__(self, database):
@@ -20,45 +15,45 @@ class RecordLabelService:
     def body_param_error(self, param):
         return { "error": param+" is not valid" }
 
-    def validate_record_label(self, data: dict):
-        if (not data.__contains__("name")):
-            return False, self.body_param_error("name");
-        else: 
-            temp_name = data["name"];
-            if not type(temp_name) is str:
-                return False, self.body_param_error("name");
+    def validate_name(self, record_label_dict: dict):
+        name = record_label_dict.get("name");
+        if not type(name) is str:
+            return name, self.body_param_error("name");
+        return name, None;
 
-        if (not data.__contains__("contract_value")):
-            return False, self.body_param_error("contract_value");
-        else:
-            temp_contract_value = data["contract_value"];
-            if not(type(temp_contract_value) is float or type(temp_contract_value) is int):
-                return False, self.body_param_error("contract_value");
-
-        if (not data.__contains__("expire_date")):
-            return False, self.body_param_error("expire_date");
-        else: 
+    def validate_expire_date(self, record_label_dict: dict):
+        expire_date: str | None = record_label_dict.get("expire_date");
+        if not type(expire_date) is str:
+            if not expire_date:
+                return None, self.body_param_error("expire_date");
             try:
-                datetime.strptime(data["expire_date"], '%Y-%m-%d %H:%M:%S');
+                datetime.strptime(expire_date, '%Y-%m-%d %H:%M:%S');
             except:
-                return False, self.body_param_error("expire_date");
+                return expire_date, self.body_param_error("expire_date");
+        return expire_date, None;
 
-        return  True, ok_validate_message;
+    def validate_contract_value(self, record_label_dict: dict):
+        contract_value = record_label_dict.get("contract_value");
+        if not(type(contract_value) is float or type(contract_value) is int):
+            return contract_value, self.body_param_error("contract_value");
+        return contract_value, None;
     
     def add(self):
         data: dict = request.get_json()
 
-        valid, message = self.validate_record_label(data);
+        name, name_error_message = self.validate_name(data);
+        if not(name) or name_error_message:
+            return name_error_message, 400
 
-        if not valid:
-            return jsonify(message), 400
+        contract_value, contract_value_error_message = self.validate_contract_value(data);
+        if not(contract_value) or contract_value_error_message:
+            return contract_value_error_message, 400
 
-        name = data["name"];
-        contract_value = data["contract_value"];
-        expire_date = data["expire_date"];
+        expire_date, expire_date_error_message = self.validate_expire_date(data);
+        if not(expire_date) or expire_date_error_message:
+            return expire_date_error_message, 400
 
         now = datetime.now();
-
         modified_at = now;
         created_at = now;
 
@@ -81,10 +76,7 @@ class RecordLabelService:
     def get_by_id(self, id):
         record_label = None;
 
-        if id.isdecimal():
-            record_label = self.session.query(RecordLabel).get(id)
-        else:
-            return jsonify({'error': 'id is not valid'}), 404
+        record_label = self.session.query(RecordLabel).get(id)
 
         self.session.close()
 
@@ -95,36 +87,44 @@ class RecordLabelService:
         
     def update(self, id):
         data = request.get_json()
-        description = data.get('description')
-        value = data.get('value')
-        limit = data.get('limit')
+        expire_date, expire_date_error_message = self.validate_expire_date(data);
+        contract_value, contract_value_error_message = self.validate_contract_value(data);
+        name, name_error_message = self.validate_name(data);
 
-        plan = self.session.query(Plan).get(id)
+        record_label = self.session.query(RecordLabel).get(id)
 
-        if not plan:
-            return jsonify({'error': 'Plan not found'}), 404
+        if not record_label:
+            return jsonify({'error': 'Record label not found'}), 404
 
-        if description:
-            plan.description = description
-        if value:
-            plan.value = value
-        if limit:
-            plan.limit = limit
+        if name and name_error_message:
+            return self.body_param_error("name");
+        if name:
+            record_label.name = name
 
-        plan.modified_at = datetime.now()
+        if contract_value and contract_value_error_message:
+            return self.body_param_error("contract_value");
+        if contract_value:
+            record_label.contract_value = contract_value
+
+        if expire_date and expire_date_error_message:
+            return self.body_param_error("expire_date");
+        if expire_date:
+            record_label.expire_date = expire_date
+
+        record_label.name = datetime.now()
         self.session.commit()
         self.session.close()
 
-        return jsonify({'message': 'Plan updated successfully'})
+        return jsonify({'message': 'Record label updated successfully'});
     
     def delete(self, id):
-        plan = self.session.query(Plan).get(id)
+        record_label = self.session.query(RecordLabel).get(id)
 
-        if not plan:
-            return jsonify({'error': 'Plan not found'}), 404
+        if not record_label:
+            return jsonify({'error': 'Record label not found'}), 404
 
-        self.session.delete(plan)
+        self.session.delete(record_label)
         self.session.commit()
         self.session.close()
 
-        return jsonify({'message': 'Plan deleted successfully'})
+        return jsonify({'message': 'Record label deleted successfully'})
