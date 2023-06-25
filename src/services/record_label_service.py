@@ -120,7 +120,7 @@ class RecordLabelService:
         if expire_date:
             record_label.expire_date = expire_date
 
-        record_label.name = datetime.now()
+        record_label.modified_at = datetime.now()
         self.session.commit()
         self.session.close()
 
