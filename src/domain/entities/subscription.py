@@ -1,6 +1,5 @@
 from infra.configs.db_base import Base
 from sqlalchemy import Column, Integer, String, DECIMAL, TIMESTAMP
-from sqlalchemy.orm import relationship
 from datetime import datetime
 
 class Subscription(Base):
@@ -11,4 +10,3 @@ class Subscription(Base):
     limit = Column(Integer, nullable=False)
     created_at = Column(TIMESTAMP, nullable=False, default=datetime.now)
     modified_at = Column(TIMESTAMP, nullable=False)
-    customers = relationship("Customer", back_populates="Subscription")

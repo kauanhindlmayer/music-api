@@ -13,15 +13,15 @@ class GenreService:
             'id': genre.id,
             'description': genre.description,
             'created_at': genre.created_at.strftime('%Y-%m-%d %H:%M:%S'),
-            'updated_at': genre.updated_at.strftime('%Y-%m-%d %H:%M:%S')
+            'modified_at': genre.modified_at.strftime('%Y-%m-%d %H:%M:%S') if genre.modified_at is not None else None
         } for genre in genres])
     
     def add(self):
         data = request.get_json()
         description = data['description']
         created_at = datetime.now()
-        updated_at = None
-        genre = Genre(description=description, created_at=created_at, updated_at=updated_at)
+        modified_at = None
+        genre = Genre(description=description, created_at=created_at, modified_at=modified_at)
         self.session.add(genre)
         self.session.commit()
         genre_id = genre.id
@@ -30,7 +30,6 @@ class GenreService:
             'id': genre_id,
             'description': description,
             'created_at': created_at.strftime('%Y-%m-%d %H:%M:%S'),
-            'updated_at': genre.updated_at.strftime('%Y-%m-%d %H:%M:%S')
         }), 201
     
     def get_by_id(self, id):
@@ -41,7 +40,7 @@ class GenreService:
                 'id': genre.id,
                 'description': genre.description,
                 'created_at': genre.created_at,
-                'updated_at': genre.updated_at
+                'modified_at': genre.modified_at.strftime('%Y-%m-%d %H:%M:%S') if genre.modified_at is not None else None
             })
         else:
             return jsonify({'error': 'Subscription not found'}), 404
@@ -57,7 +56,7 @@ class GenreService:
 
         genre.description = description
 
-        genre.updated_at = datetime.now()
+        genre.modified_at = datetime.now()
         self.session.commit()
         self.session.close()
 

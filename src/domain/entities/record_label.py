@@ -1,6 +1,5 @@
 from infra.configs.db_base import Base
 from sqlalchemy import Column, Integer, String, TIMESTAMP
-from sqlalchemy.orm import relationship
 from datetime import datetime
 
 class RecordLabel(Base):
@@ -11,4 +10,3 @@ class RecordLabel(Base):
     expire_date = Column(TIMESTAMP, nullable=False)
     created_at = Column(TIMESTAMP, nullable=False, default=datetime.now)
     modified_at = Column(TIMESTAMP, nullable=False)
-    artists = relationship("Artist", back_populates="RecordLabel")
