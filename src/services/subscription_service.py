@@ -2,7 +2,7 @@ from domain.entities.subscription import Subscription
 from datetime import datetime
 from flask import request, jsonify
 
-class PlanService:
+class SubcriptionService:
     def __init__(self, database):
         self.session = database.session
 
