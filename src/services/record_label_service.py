@@ -1,16 +1,25 @@
 from datetime import datetime
 from flask import request, jsonify
 from typing import List
-from domain.entities.record_label import RecordLabel, record_label_to_json
+from domain.entities.record_label import RecordLabel
 
 class RecordLabelService:
+    def record_label_to_json(self, record_label):
+        return {
+            'id': record_label.id,
+            'name': record_label.name,
+            'contract_value': record_label.contract_value,
+            'expire_date': record_label.expire_date.strftime('%Y-%m-%d %H:%M:%S'),
+            'created_at': record_label.created_at.strftime('%Y-%m-%d %H:%M:%S'),
+            'modified_at': record_label.modified_at.strftime('%Y-%m-%d %H:%M:%S')
+    }
     def __init__(self, database):
         self.session = database.session
 
     def get_all(self):
         record_labels: List[RecordLabel] = self.session.query(RecordLabel).all()
         self.session.close()
-        return jsonify(list(map(lambda label: record_label_to_json(label), record_labels)))
+        return jsonify(list(map(lambda label: self.record_label_to_json(label), record_labels)))
 
     def body_param_error(self, param):
         return { "error": param+" is not valid" }
@@ -71,7 +80,7 @@ class RecordLabelService:
         self.session.close()
         record_label.id = record_label_id
         
-        return record_label_to_json(record_label);
+        return self.record_label_to_json(record_label);
     
     def get_by_id(self, id):
         record_label = None;
@@ -81,7 +90,7 @@ class RecordLabelService:
         self.session.close()
 
         if record_label:
-            return record_label_to_json(record_label);
+            return self.record_label_to_json(record_label);
         else:
             return jsonify({'error': 'Record label not found'}), 404
         

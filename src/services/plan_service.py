@@ -1,4 +1,4 @@
-from domain.entities.plan import Plan
+from domain.entities.subscription import Subscription
 from datetime import datetime
 from flask import request, jsonify
 
@@ -7,15 +7,15 @@ class PlanService:
         self.session = database.session
 
     def get_all(self):
-        plans = self.session.query(Plan).all()
+        subscriptions = self.session.query(Subscription).all()
         self.session.close()
         return jsonify([{
-            'id': plan.id,
-            'description': plan.description,
-            'value': plan.value,
-            'limit': plan.limit,
-            'created_at': plan.created_at.strftime('%Y-%m-%d %H:%M:%S')
-        } for plan in plans])
+            'id': subscription.id,
+            'description': subscription.description,
+            'value': subscription.value,
+            'limit': subscription.limit,
+            'created_at': subscription.created_at.strftime('%Y-%m-%d %H:%M:%S')
+        } for subscription in subscriptions])
     
     def add(self):
         data = request.get_json()
@@ -23,10 +23,10 @@ class PlanService:
         value = data['value']
         limit = data['limit']
         created_at = datetime.now()
-        plan = Plan(description=description, value=value, limit=limit, created_at=created_at)
-        self.session.add(plan)
+        subscription = Subscription(description=description, value=value, limit=limit, created_at=created_at)
+        self.session.add(subscription)
         self.session.commit()
-        plan_id = plan.id
+        plan_id = subscription.id
         self.session.close()
         return jsonify({
             'id': plan_id,
@@ -37,19 +37,19 @@ class PlanService:
         }), 201
     
     def get_by_id(self, id):
-        plan = self.session.query(Plan).get(id)
+        subscription = self.session.query(Subscription).get(id)
         self.session.close()
-        if plan:
+        if subscription:
             return jsonify({
-                'id': plan.id,
-                'description': plan.description,
-                'value': plan.value,
-                'limit': plan.limit,
-                'created_at': plan.created_at,
-                'modified_at': plan.modified_at
+                'id': subscription.id,
+                'description': subscription.description,
+                'value': subscription.value,
+                'limit': subscription.limit,
+                'created_at': subscription.created_at,
+                'modified_at': subscription.modified_at
             })
         else:
-            return jsonify({'error': 'Plan not found'}), 404
+            return jsonify({'error': 'Subscription not found'}), 404
         
     def update(self, id):
         data = request.get_json()
@@ -57,32 +57,32 @@ class PlanService:
         value = data.get('value')
         limit = data.get('limit')
 
-        plan = self.session.query(Plan).get(id)
+        subscription = self.session.query(Subscription).get(id)
 
-        if not plan:
-            return jsonify({'error': 'Plan not found'}), 404
+        if not subscription:
+            return jsonify({'error': 'Subscription not found'}), 404
 
         if description:
-            plan.description = description
+            subscription.description = description
         if value:
-            plan.value = value
+            subscription.value = value
         if limit:
-            plan.limit = limit
+            subscription.limit = limit
 
-        plan.modified_at = datetime.now()
+        subscription.modified_at = datetime.now()
         self.session.commit()
         self.session.close()
 
-        return jsonify({'message': 'Plan updated successfully'})
+        return jsonify({'message': 'Subscription updated successfully'})
     
     def delete(self, id):
-        plan = self.session.query(Plan).get(id)
+        subscription = self.session.query(Subscription).get(id)
 
-        if not plan:
-            return jsonify({'error': 'Plan not found'}), 404
+        if not subscription:
+            return jsonify({'error': 'Subscription not found'}), 404
 
-        self.session.delete(plan)
+        self.session.delete(subscription)
         self.session.commit()
         self.session.close()
 
-        return jsonify({'message': 'Plan deleted successfully'})
+        return jsonify({'message': 'Subscription deleted successfully'})
