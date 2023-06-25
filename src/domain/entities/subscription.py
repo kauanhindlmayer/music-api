@@ -11,4 +11,4 @@ class Subscription(Base):
     limit = Column(Integer, nullable=False)
     created_at = Column(TIMESTAMP, nullable=False, default=datetime.now)
     modified_at = Column(TIMESTAMP, nullable=False)
-    customers = relationship("Customer", back_pupulates="Subscription")
+    customers = relationship("Customer", back_populates="Subscription")

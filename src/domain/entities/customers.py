@@ -13,4 +13,4 @@ class Customer(Base):
     created_at = Column(TIMESTAMP, nullable=False, default=datetime.now)
     modified_at = Column(TIMESTAMP, nullable=False)
     musics = relationship("Music", back_populates="Customer")
-    subscription = relationship("Subscription", back_pupulates="Customer")
+    subscription = relationship("Subscription", back_populates="Customer")
