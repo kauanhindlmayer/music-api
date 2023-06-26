@@ -1,4 +1,5 @@
 
+from sqlalchemy import desc
 from domain.entities.music import Music
 from domain.entities.genre import Genre
 from datetime import datetime
@@ -17,7 +18,7 @@ class MusicService:
         for music in musics:
                 music.genre = self.session.query(Genre).filter_by(id=music.genre_id).first()
                 artists = self.session.query(Artist).join(MusicHasArtist).filter(MusicHasArtist.music_id == music.id)
-                music.artists = artists.all()
+                music.artists = str(artists.all())
 
         self.session.close()
         return jsonify([
@@ -54,8 +55,18 @@ class MusicService:
             created_at=created_at,
             modified_at=modified_at
         )
-
         self.session.add(music)
+        self.session.commit()
+
+        music_id_test = self.session.query(Music).order_by(desc(Music.id)).first()
+        music_id = music_id_test.id if music_id_test else None
+
+        music_has_artists = MusicHasArtist(
+            music_id=music_id,
+            artist_id=data['artist_id']
+        )
+
+        self.session.add(music_has_artists)
         self.session.commit()
 
         music_id = music.id

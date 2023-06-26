@@ -12,3 +12,6 @@ class MusicHasArtist(Base):
     artist_id = Column(Integer, ForeignKey('artists.id'))
     music = relationship("Music")
     artist = relationship("Artist")
+
+    def __repr__(self):
+        return f"MusicHasArtist [id={self.id}, music_id={self.music_id}, artist_id={self.artist_id}]"
