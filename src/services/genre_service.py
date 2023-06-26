@@ -20,7 +20,7 @@ class GenreService:
         data = request.get_json()
         description = data['description']
         created_at = datetime.now()
-        modified_at = None
+        modified_at = datetime.now()
         genre = Genre(description=description, created_at=created_at, modified_at=modified_at)
         self.session.add(genre)
         self.session.commit()

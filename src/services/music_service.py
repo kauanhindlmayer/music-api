@@ -1,7 +1,11 @@
 
 from domain.entities.music import Music
+from domain.entities.genre import Genre
 from datetime import datetime
 from flask import request, jsonify
+
+from domain.entities.artist import Artist
+from domain.entities.music_has_artist import MusicHasArtist
 
 class MusicService:
     def __init__(self, database):
@@ -9,27 +13,38 @@ class MusicService:
 
     def get_all(self):
         musics = self.session.query(Music).all()
+        
+        for music in musics:
+                music.genre = self.session.query(Genre).filter_by(id=music.genre_id).first()
+                artists = self.session.query(Artist).join(MusicHasArtist).filter(MusicHasArtist.music_id == music.id)
+                music.artists = artists.all()
+
         self.session.close()
         return jsonify([
             {
                 'id': music.id,
                 'name': music.name,
                 'duration': music.duration.strftime('%Y-%m-%d %H:%M:%S'),
-                'genre_id': music.genre_id,
+                'genre': str(music.genre),
+                'artists':music.artists,
                 'release_date': music.release_date.strftime('%Y-%m-%d %H:%M:%S'),
                 'created_at': music.created_at.strftime('%Y-%m-%d %H:%M:%S'),
                 'modified_at': music.modified_at.strftime('%Y-%m-%d %H:%M:%S')
-            } for music in musics
+                } for music in musics
         ])
 
-    def add(self):
-        data = request.get_json()
+    def add(self,data):
         name = data['name']
-        duration = data['duration']
+        duration_str = data['duration']
         genre_id = data['genre_id']
-        release_date = data['release_date']
+        release_date_str = data['release_date']
         created_at = datetime.now()
         modified_at = datetime.now()
+
+        duration = datetime.strptime(duration_str, "%Y-%m-%dT%H:%M:%SZ")
+
+        # Convert release_date string to datetime object
+        release_date = datetime.strptime(release_date_str, "%Y-%m-%dT%H:%M:%SZ")
 
         music = Music(
             name=name,

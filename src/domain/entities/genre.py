@@ -13,3 +13,4 @@ class Genre(Base):
 
     def __repr__(self):
         return f"Genres [id={self.id}, description={self.description}]"
+

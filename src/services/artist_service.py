@@ -2,18 +2,25 @@ from domain.entities.artist import Artist
 from datetime import datetime
 from flask import request, jsonify
 
+from domain.entities.record_label import RecordLabel
+
 class ArtistService:
      def __init__(self, database):
         self.session = database.session
 
      def get_all(self):
         artists = self.session.query(Artist).all()
+
+        for artist in artists:
+                artist.record_label = self.session.query(RecordLabel).filter_by(id=artist.record_label_id).first()
+
         self.session.close()
+        
         return jsonify([
             {
                 'id': artist.id,
                 'name': artist.name,
-                'record_label_id': artist.record_label_id,
+                'record_label': str(artist.record_label),
                 'created_at': artist.created_at.strftime('%Y-%m-%d %H:%M:%S'),
                 'modified_at': artist.modified_at.strftime('%Y-%m-%d %H:%M:%S') if artist.modified_at else None
             }

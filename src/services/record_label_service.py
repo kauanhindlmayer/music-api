@@ -66,6 +66,8 @@ class RecordLabelService:
         modified_at = now;
         created_at = now;
 
+        expire_date = datetime.strptime(expire_date, "%Y-%m-%dT%H:%M:%S")
+
         record_label = RecordLabel(
             name=name,
             contract_value=contract_value,
@@ -75,6 +77,7 @@ class RecordLabelService:
         )
 
         self.session.add(record_label)
+        
         self.session.commit()
         record_label_id = record_label.id
         self.session.close()
