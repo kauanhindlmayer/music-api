@@ -10,7 +10,7 @@ class DBConnectionHandler:
             '1234',
             'localhost',
             '3306',
-            'music'
+            'music_api_database'
         )
         self.__engine = self.__create_database_engine()
         self.session = None
