@@ -1,5 +1,17 @@
 CREATE DATABASE IF NOT EXISTS music_api_database;
 
+CREATE TABLE IF NOT EXISTS `artist` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `nome` varchar(45) NOT NULL,
+  `gravadoras_id` int NOT NULL,
+  `created` timestamp NULL DEFAULT NULL,
+  `modified` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `nome_UNIQUE` (`nome`),
+  KEY `record_label_id` (`gravadoras_id`)
+  CONSTRAINT `artist_fk` FOREIGN KEY (`record_label_id`) REFERENCES `record_label` (`id`)
+) 
+
 CREATE TABLE IF NOT EXISTS `music_api_database`.`genres` (
   `id` int NOT NULL AUTO_INCREMENT,
   `description` varchar(45) NOT NULL,
