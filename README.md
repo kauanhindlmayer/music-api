@@ -8,7 +8,7 @@ The goal of these endpoints is to be simple, well-documented and to provide a ba
 1. Run `docker build -t docker-mysql .` to build a Docker image using the dockerfile in the current directory
 2. Run `docker run -p 3306:3306 --name mysql-container -d docker-mysql` to run a Docker container from the specified image
 3. Run `docker exec -it mysql-container mysql -uroot -p1234` to lauch the MySQL client inside the container
-4. Run `CREATE DATABASE music` to create a new database named `music`
+4. Run `CREATE DATABASE music_api_database;` to create a new database named `music_api_database`
 5. Run `python -m venv .venv` to create the virtual enviroment
 6. Run the following commands to activate the virtual enviroment depending on which operating system and command shell you're using:
    - On Unix or MacOS, using the bash shell: `source .venv/bin/activate`

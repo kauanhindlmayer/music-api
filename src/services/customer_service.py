@@ -1,4 +1,4 @@
-from domain.entities.customer import Customer
+from infra.db.entities.customer import Customer
 from datetime import datetime
 from flask import request, jsonify
 import bcrypt

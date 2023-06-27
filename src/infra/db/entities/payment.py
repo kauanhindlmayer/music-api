@@ -5,7 +5,7 @@ from datetime import datetime
 class Payment(Base):
     __tablename__ = 'payments'
 
-    id = Column(Integer, primary_key=True)
+    id = Column(Integer, primary_key=True, autoincrement=True)
     payment_date = Column(TIMESTAMP, nullable=False)
     created_at = Column(TIMESTAMP, nullable=False, default=datetime.now)
     modified_at = Column(TIMESTAMP, nullable=True)

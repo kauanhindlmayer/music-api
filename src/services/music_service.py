@@ -1,5 +1,5 @@
 
-from domain.entities.music import Music
+from infra.db.entities.music import Music
 from datetime import datetime
 from flask import request, jsonify
 

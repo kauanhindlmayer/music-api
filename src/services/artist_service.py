@@ -1,4 +1,4 @@
-from domain.entities.artist import Artist
+from infra.db.entities.artist import Artist
 from datetime import datetime
 from flask import request, jsonify
 
