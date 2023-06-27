@@ -7,6 +7,8 @@ from flask import request, jsonify
 
 from domain.entities.artist import Artist
 from domain.entities.music_has_artist import MusicHasArtist
+from domain.entities.music_has_customer import MusicHasCustomer
+from domain.entities.customer import Customer
 
 class MusicService:
     def __init__(self, database):
@@ -18,6 +20,8 @@ class MusicService:
         for music in musics:
                 music.genre = self.session.query(Genre).filter_by(id=music.genre_id).first()
                 artists = self.session.query(Artist).join(MusicHasArtist).filter(MusicHasArtist.music_id == music.id)
+                customer = self.session.query(Customer).join(MusicHasCustomer).filter(MusicHasCustomer.music_id == music.id)
+                music.artists = str(customer.all())
                 music.artists = str(artists.all())
 
         self.session.close()
@@ -58,15 +62,23 @@ class MusicService:
         self.session.add(music)
         self.session.commit()
 
-        music_id_test = self.session.query(Music).order_by(desc(Music.id)).first()
-        music_id = music_id_test.id if music_id_test else None
+        music_id_bd = self.session.query(Music).order_by(desc(Music.id)).first()
+        music_id = music_id_bd.id if music_id_bd else None
 
-        music_has_artists = MusicHasArtist(
+        request_artists= data['artist_id']
+        for artist in request_artists:
+            music_has_artists = MusicHasArtist(
+                music_id=music_id,
+                artist_id=artist
+            )
+            self.session.add(music_has_artists)
+
+        music_has_customers = MusicHasCustomer(
             music_id=music_id,
-            artist_id=data['artist_id']
+            customer_id=data['customer_id']
         )
-
-        self.session.add(music_has_artists)
+        
+        #self.session.add(music_has_customers)
         self.session.commit()
 
         music_id = music.id
