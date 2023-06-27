@@ -1,7 +1,7 @@
 from datetime import datetime
 from flask import request, jsonify
 from typing import List
-from domain.entities.record_label import RecordLabel
+from infra.db.entities.record_label import RecordLabel
 
 class RecordLabelService:
     def record_label_to_json(self, record_label):

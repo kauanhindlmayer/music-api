@@ -6,7 +6,7 @@ from datetime import datetime
 class Genre(Base):
     __tablename__ = 'genres'
 
-    id = Column(Integer, primary_key=True)
+    id = Column(Integer, primary_key=True, autoincrement=True)
     description = Column(String(45), nullable=False)
     created_at = Column(TIMESTAMP, nullable=False, default=datetime.now)
     modified_at = Column(TIMESTAMP, nullable=True)
