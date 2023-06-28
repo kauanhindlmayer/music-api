@@ -1,6 +1,7 @@
-from domain.entities.subscription import Subscription
+from infra.db.entities.subscription import Subscription
 from datetime import datetime
 from flask import request, jsonify
+from sqlalchemy.exc import IntegrityError
 
 class SubcriptionService:
     def __init__(self, database):
@@ -81,8 +82,12 @@ class SubcriptionService:
         if not subscription:
             return jsonify({'error': 'Subscription not found'}), 404
 
-        self.session.delete(subscription)
-        self.session.commit()
-        self.session.close()
+        try:
+            self.session.delete(subscription)
+            self.session.commit()
+            self.session.close()
+        except  IntegrityError:
+            self.session.rollback()
+            return jsonify({'message': 'Não é possível excluir esse item, está associado a outras tabelas'}),401
 
         return jsonify({'message': 'Subscription deleted successfully'})

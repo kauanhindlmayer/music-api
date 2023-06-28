@@ -1,13 +1,13 @@
 from infra.db.settings.base import Base
 from sqlalchemy import Column, Integer, ForeignKey
 from sqlalchemy.orm import relationship
-from domain.entities.music import Music
-from domain.entities.customer import Customer
+from infra.db.entities.music import Music
+from infra.db.entities.customer import Customer
 
 class MusicHasCustomer(Base):
     __tablename__ = 'music_has_customers'
     
-    id = Column(Integer, primary_key=True)
+    id = Column(Integer, primary_key=True, autoincrement=True)
     music_id = Column(Integer, ForeignKey('musics.id'))
     customer_id = Column(Integer, ForeignKey('customers.id'))
     music = relationship("Music")

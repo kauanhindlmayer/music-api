@@ -5,7 +5,7 @@ from datetime import datetime
 class Subscription(Base):
     __tablename__ = 'subscriptions'
 
-    id = Column(Integer, primary_key=True)
+    id = Column(Integer, primary_key=True, autoincrement=True)
     description = Column(String(45), nullable=False)
     value = Column(DECIMAL(5, 2), nullable=False)
     limit = Column(Integer, nullable=False)
