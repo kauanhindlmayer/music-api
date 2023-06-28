@@ -2,6 +2,7 @@ from datetime import datetime
 from flask import request, jsonify
 from typing import List
 from infra.db.entities.record_label import RecordLabel
+from sqlalchemy.exc import IntegrityError
 
 class RecordLabelService:
     def record_label_to_json(self, record_label):
@@ -66,6 +67,8 @@ class RecordLabelService:
         modified_at = now;
         created_at = now;
 
+        expire_date = datetime.strptime(expire_date, "%Y-%m-%dT%H:%M:%S")
+
         record_label = RecordLabel(
             name=name,
             contract_value=contract_value,
@@ -75,6 +78,7 @@ class RecordLabelService:
         )
 
         self.session.add(record_label)
+        
         self.session.commit()
         record_label_id = record_label.id
         self.session.close()
@@ -131,9 +135,12 @@ class RecordLabelService:
 
         if not record_label:
             return jsonify({'error': 'Record label not found'}), 404
-
-        self.session.delete(record_label)
-        self.session.commit()
-        self.session.close()
+        try:
+            self.session.delete(record_label)
+            self.session.commit()
+            self.session.close()
+        except IntegrityError:
+            self.session.rollback()
+            return jsonify({'message': 'Não é possível excluir esse item, está associado a outras tabelas'}),401
 
         return jsonify({'message': 'Record label deleted successfully'})

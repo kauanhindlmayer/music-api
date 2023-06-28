@@ -1,6 +1,7 @@
 from infra.db.entities.genre import Genre
 from datetime import datetime
 from flask import request, jsonify
+from sqlalchemy.exc import IntegrityError
 
 class GenreService:
     def __init__(self, database):
@@ -20,7 +21,7 @@ class GenreService:
         data = request.get_json()
         description = data['description']
         created_at = datetime.now()
-        modified_at = None
+        modified_at = datetime.now()
         genre = Genre(description=description, created_at=created_at, modified_at=modified_at)
         self.session.add(genre)
         self.session.commit()
@@ -67,9 +68,12 @@ class GenreService:
 
         if not genre:
             return jsonify({'error': 'Subscription not found'}), 404
-
-        self.session.delete(genre)
-        self.session.commit()
-        self.session.close()
-
+        try:
+            self.session.delete(genre)
+            self.session.commit()
+            self.session.close()
+        except IntegrityError:
+            self.session.rollback()
+            return jsonify({'message': 'Não é possível excluir esse item, está associado a outras tabelas'}),401
+        
         return jsonify({'message': 'Subscription deleted successfully'})

@@ -2,6 +2,10 @@ from infra.db.entities.customer import Customer
 from datetime import datetime
 from flask import request, jsonify
 import bcrypt
+from sqlalchemy.exc import IntegrityError
+
+from infra.db.entities.subscription import Subscription
+
 
 class CustomerService:
     def __init__(self, database):
@@ -9,6 +13,8 @@ class CustomerService:
 
     def get_all(self):
         customers = self.session.query(Customer).all()
+        for customer in customers:
+            customer.subscription = self.session.query(Subscription).filter_by(id=customer.subscription_id).first()
         self.session.close()
         return jsonify([
             {
@@ -16,7 +22,7 @@ class CustomerService:
                 'login': customer.login,
                 'password': customer.password,
                 'email': customer.email,
-                'subscription_id': customer.subscription_id,
+                'subscription': str(customer.subscription),
                 'created_at': customer.created_at.strftime('%Y-%m-%d %H:%M:%S'),
                 'modified_at': customer.modified_at.strftime('%Y-%m-%d %H:%M:%S')
             } for customer in customers
@@ -60,6 +66,8 @@ class CustomerService:
         
     def get_by_id(self, id):
         customer = self.session.query(Customer).get(id)
+        
+        customer.subscription = self.session.query(Subscription).filter_by(id=customer.subscription_id).first()
         self.session.close()
 
         if customer:
@@ -68,7 +76,7 @@ class CustomerService:
                 'login': customer.login,
                 'password': customer.password,
                 'email': customer.email,
-                'subscription_id': customer.subscription_id,
+                'subscription': str(customer.subscription),
                 'created_at': customer.created_at,
                 'modified_at': customer.modified_at.strftime('%Y-%m-%d %H:%M:%S') if customer.modified_at is not None else None
             })
@@ -107,9 +115,12 @@ class CustomerService:
 
         if not customer:
             return jsonify({'error': 'Customer not found'}), 404
-
-        self.session.delete(customer)
-        self.session.commit()
-        self.session.close()
+        try:
+            self.session.delete(customer)
+            self.session.commit()
+            self.session.close()
+        except IntegrityError:
+            self.session.rollback()
+            return jsonify({'message': 'Não é possível excluir esse item, está associado a outras tabelas'}),401
 
         return jsonify({'message': 'Customer deleted successfully'})

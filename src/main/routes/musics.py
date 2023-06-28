@@ -1,4 +1,4 @@
-from flask import Blueprint
+from flask import Blueprint, request
 from infra.db.settings.connection import DBConnectionHandler
 from services.music_service import MusicService
 
@@ -14,7 +14,8 @@ def get_all_music():
 
 @music_bp.route('/music', methods=['POST'])
 def add_music():
-    return music_service.add()
+    data = request.get_json()
+    return music_service.add(data)
 
 @music_bp.route('/music/<int:id>', methods=['GET'])
 def get_music_by_id(id):

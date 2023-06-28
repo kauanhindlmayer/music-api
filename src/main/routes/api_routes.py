@@ -10,13 +10,17 @@ from infra.db.settings.connection import DBConnectionHandler
 from infra.db.settings.base import Base
 
 database = DBConnectionHandler()
-Base.metadata.create_all(database.get_engine())
+try:
+    Base.metadata.create_all(database.get_engine())
+    app = Flask(__name__)
 
-app = Flask(__name__)
+    app.register_blueprint(subscriptions_bp)
+    app.register_blueprint(customers_bp)
+    app.register_blueprint(genres_bp)
+    app.register_blueprint(record_labels_bp)
+    app.register_blueprint(music_bp)
+    app.register_blueprint(artists_bp)
+    
+except:
+    print("\n\n\n\n\nBanco de dados desconectado ...... \n\n\n\n\n")
 
-app.register_blueprint(subscriptions_bp)
-app.register_blueprint(genres_bp)
-app.register_blueprint(record_labels_bp)
-app.register_blueprint(music_bp)
-app.register_blueprint(artists_bp)
-app.register_blueprint(customers_bp)

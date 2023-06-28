@@ -1,6 +1,9 @@
 from infra.db.entities.artist import Artist
 from datetime import datetime
 from flask import request, jsonify
+from sqlalchemy.exc import IntegrityError
+from infra.db.entities.record_label import RecordLabel
+
 
 class ArtistService:
      def __init__(self, database):
@@ -8,12 +11,17 @@ class ArtistService:
 
      def get_all(self):
         artists = self.session.query(Artist).all()
+
+        for artist in artists:
+                artist.record_label = self.session.query(RecordLabel).filter_by(id=artist.record_label_id).first()
+
         self.session.close()
+        
         return jsonify([
             {
                 'id': artist.id,
                 'name': artist.name,
-                'record_label_id': artist.record_label_id,
+                'record_label': str(artist.record_label),
                 'created_at': artist.created_at.strftime('%Y-%m-%d %H:%M:%S'),
                 'modified_at': artist.modified_at.strftime('%Y-%m-%d %H:%M:%S') if artist.modified_at else None
             }
@@ -42,13 +50,14 @@ class ArtistService:
 
      def get_by_id(self, id):
         artist = self.session.query(Artist).get(id)
+        artist.record_label = self.session.query(RecordLabel).filter_by(id=artist.record_label_id).first()
         self.session.close()
 
         if artist:
             return jsonify({
                 'id': artist.id,
                 'name': artist.name,
-                'record_label_id': artist.record_label_id,
+                'record_label': str(artist.record_label),
                 'created_at': artist.created_at.strftime('%Y-%m-%d %H:%M:%S'),
                 'modified_at': artist.modified_at.strftime('%Y-%m-%d %H:%M:%S') if artist.modified_at else None
             })
@@ -81,9 +90,12 @@ class ArtistService:
 
         if not artist:
             return jsonify({'error': 'Artist not found'}), 404
-
-        self.session.delete(artist)
-        self.session.commit()
-        self.session.close()
-
+        try:
+            self.session.delete(artist)
+            self.session.commit()
+            self.session.close()
+        except IntegrityError:
+            self.session.rollback()
+            return jsonify({'message': 'Não é possível excluir esse item, está associado a outras tabelas'}),401
+        
         return jsonify({'message': 'Artist deleted successfully'})
