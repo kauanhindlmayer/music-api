@@ -1,6 +1,7 @@
 CREATE DATABASE IF NOT EXISTS music_api_database;
 
-CREATE TABLE IF NOT EXISTS `artist` (
+-- music_api_database.artist definition
+CREATE TABLE IF NOT EXISTS `artists` (
   `id` int NOT NULL AUTO_INCREMENT,
   `nome` varchar(45) NOT NULL,
   `gravadoras_id` int NOT NULL,
@@ -12,6 +13,21 @@ CREATE TABLE IF NOT EXISTS `artist` (
   CONSTRAINT `artist_fk` FOREIGN KEY (`record_label_id`) REFERENCES `record_label` (`id`)
 ) 
 
+-- music_api_database.customers definition
+CREATE TABLE IF NOT EXISTS `music_api_database`.`customers` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `login` varchar(45) NOT NULL,
+  `password` varchar(60) NOT NULL,
+  `email` varchar(45) NOT NULL,
+  `subscription_id` int DEFAULT NULL,
+  `created_at` timestamp NOT NULL,
+  `modified_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `subscription_id` (`subscription_id`),
+  CONSTRAINT `customers_ibfk_1` FOREIGN KEY (`subscription_id`) REFERENCES `subscriptions` (`id`)
+)
+
+-- music_api_database.genres definition
 CREATE TABLE IF NOT EXISTS `music_api_database`.`genres` (
   `id` int NOT NULL AUTO_INCREMENT,
   `description` varchar(45) NOT NULL,
@@ -20,6 +36,31 @@ CREATE TABLE IF NOT EXISTS `music_api_database`.`genres` (
   PRIMARY KEY (`id`)
 )
 
+-- music_api_database.music_has_artists definition
+CREATE TABLE IF NOT EXISTS `music_api_database`.`music_has_artists` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `music_id` int DEFAULT NULL,
+  `artist_id` int DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `music_id` (`music_id`),
+  KEY `artist_id` (`artist_id`),
+  CONSTRAINT `music_has_artists_ibfk_1` FOREIGN KEY (`music_id`) REFERENCES `musics` (`id`),
+  CONSTRAINT `music_has_artists_ibfk_2` FOREIGN KEY (`artist_id`) REFERENCES `artists` (`id`)
+)
+
+-- music_api_database.music_has_customers definition
+CREATE TABLE IF NOT EXISTS `music_api_database`.`music_has_customers` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `music_id` int DEFAULT NULL,
+  `customer_id` int DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `music_id` (`music_id`),
+  KEY `customer_id` (`customer_id`),
+  CONSTRAINT `music_has_customers_ibfk_1` FOREIGN KEY (`music_id`) REFERENCES `musics` (`id`),
+  CONSTRAINT `music_has_customers_ibfk_2` FOREIGN KEY (`customer_id`) REFERENCES `customers` (`id`)
+)
+
+-- music_api_database.musics definition
 CREATE TABLE IF NOT EXISTS `music_api_database`.`musics` (
   `id` int NOT NULL AUTO_INCREMENT,
   `name` varchar(45) NOT NULL,
@@ -33,6 +74,7 @@ CREATE TABLE IF NOT EXISTS `music_api_database`.`musics` (
   CONSTRAINT `musics_ibfk_1` FOREIGN KEY (`genre_id`) REFERENCES `genres` (`id`)
 )
 
+-- music_api_database.record_label definition
 CREATE TABLE IF NOT EXISTS `music_api_database`.`record_label` (
   `id` int NOT NULL AUTO_INCREMENT,
   `name` varchar(45) NOT NULL,
@@ -43,6 +85,7 @@ CREATE TABLE IF NOT EXISTS `music_api_database`.`record_label` (
   PRIMARY KEY (`id`)
 )
 
+-- music_api_database.subscriptions definition
 CREATE TABLE IF NOT EXISTS `music_api_database`.`subscriptions` (
   `id` int NOT NULL AUTO_INCREMENT,
   `description` varchar(45) NOT NULL,
