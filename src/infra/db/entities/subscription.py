@@ -1,4 +1,4 @@
-from infra.db.settings.base import Base
+from src.infra.db.settings.base import Base
 from sqlalchemy import Column, Integer, String, DECIMAL, TIMESTAMP
 from datetime import datetime
 

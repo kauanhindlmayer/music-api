@@ -1,8 +1,8 @@
-from infra.db.settings.base import Base
+from src.infra.db.settings.base import Base
 from sqlalchemy import Column, Integer, String, TIMESTAMP, ForeignKey
 from sqlalchemy.orm import relationship
 from datetime import datetime
-from infra.db.entities.subscription import Subscription
+from src.infra.db.entities.subscription import Subscription
 
 class Customer(Base):
     __tablename__ = 'customers'

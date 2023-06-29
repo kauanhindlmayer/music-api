@@ -1,10 +1,9 @@
-from infra.db.entities.customer import Customer
-from datetime import datetime
-from flask import request, jsonify
-import bcrypt
+from src.infra.db.entities.customer import Customer
+from src.infra.db.entities.subscription import Subscription
 from sqlalchemy.exc import IntegrityError
-
-from infra.db.entities.subscription import Subscription
+from flask import request, jsonify
+from datetime import datetime
+import bcrypt
 
 
 class CustomerService:

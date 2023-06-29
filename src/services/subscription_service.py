@@ -1,4 +1,4 @@
-from infra.db.entities.subscription import Subscription
+from src.infra.db.entities.subscription import Subscription
 from datetime import datetime
 from flask import request, jsonify
 from sqlalchemy.exc import IntegrityError

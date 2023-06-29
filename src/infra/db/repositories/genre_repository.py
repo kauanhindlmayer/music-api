@@ -1,5 +1,5 @@
-from infra.db.settings.connection import DBConnectionHandler
-from infra.db.entities.genre import Genre as GenreEntity
+from src.infra.db.settings.connection import DBConnectionHandler
+from src.infra.db.entities.genre import Genre as GenreEntity
 
 class GenreRepository:
     

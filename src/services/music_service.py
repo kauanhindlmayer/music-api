@@ -1,15 +1,15 @@
 
 from sqlalchemy import delete, desc
 
-from infra.db.entities.music import Music
+from src.infra.db.entities.music import Music
 from datetime import datetime
 from flask import request, jsonify
-from infra.db.entities.artist import Artist
-from infra.db.entities.customer import Customer
+from src.infra.db.entities.artist import Artist
+from src.infra.db.entities.customer import Customer
 
-from infra.db.entities.genre import Genre
-from infra.db.entities.music_has_artist import MusicHasArtist
-from infra.db.entities.music_has_customer import MusicHasCustomer
+from src.infra.db.entities.genre import Genre
+from src.infra.db.entities.music_has_artist import MusicHasArtist
+from src.infra.db.entities.music_has_customer import MusicHasCustomer
 
 
 class MusicService:
