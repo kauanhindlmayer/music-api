@@ -2,7 +2,6 @@ from src.infra.db.settings.base import Base
 from sqlalchemy import Column, Integer, String, TIMESTAMP, ForeignKey
 from sqlalchemy.orm import relationship
 from datetime import datetime
-from src.infra.db.entities.record_label import RecordLabel
 
 
 class Artist(Base):

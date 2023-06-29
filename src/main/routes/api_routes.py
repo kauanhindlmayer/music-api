@@ -22,5 +22,5 @@ try:
     app.register_blueprint(artists_bp)
     
 except:
-    print("\n\n\n\n\nBanco de dados desconectado ...... \n\n\n\n\n")
+    print("\nBanco de dados desconectado...")
 

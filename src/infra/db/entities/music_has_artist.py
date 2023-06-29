@@ -1,8 +1,6 @@
 from src.infra.db.settings.base import Base
 from sqlalchemy import Column, Integer, ForeignKey
 from sqlalchemy.orm import relationship
-from src.infra.db.entities.music import Music
-from src.infra.db.entities.artist import Artist
 
 class MusicHasArtist(Base):
     __tablename__ = 'music_has_artists'
