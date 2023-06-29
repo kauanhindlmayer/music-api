@@ -20,9 +20,13 @@ class GenreService:
     def add(self):
         data = request.get_json()
         description = data['description']
-        created_at = datetime.now()
-        modified_at = datetime.now()
-        genre = Genre(description=description, created_at=created_at, modified_at=modified_at)
+
+        genre_founded = self.session.query(Genre).filter_by(description=description).all()
+        if genre_founded:
+            return jsonify({'error': 'Genre already exists!'}), 404
+
+        now = datetime.now()
+        genre = Genre(description=description, created_at=now, modified_at=now)
         self.session.add(genre)
         self.session.commit()
         genre_id = genre.id
@@ -30,7 +34,7 @@ class GenreService:
         return jsonify({
             'id': genre_id,
             'description': description,
-            'created_at': created_at.strftime('%Y-%m-%d %H:%M:%S'),
+            'created_at': now.strftime('%Y-%m-%d %H:%M:%S'),
         }), 201
     
     def get_by_id(self, id):
