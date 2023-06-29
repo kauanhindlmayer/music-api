@@ -1,6 +1,6 @@
 from flask import Blueprint
-from infra.db.settings.connection import DBConnectionHandler
-from services.record_label_service import RecordLabelService
+from src.infra.db.settings.connection import DBConnectionHandler
+from src.services.record_label_service import RecordLabelService
 
 database = DBConnectionHandler()
 database.__enter__()

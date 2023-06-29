@@ -1,13 +1,13 @@
 from flask import Flask
-from main.routes.subscriptions import subscriptions_bp
-from main.routes.genres import genres_bp
-from main.routes.record_labels import record_labels_bp
-from main.routes.musics import music_bp
-from main.routes.artists import artists_bp
-from main.routes.customers import customers_bp
+from src.main.routes.subscriptions import subscriptions_bp
+from src.main.routes.genres import genres_bp
+from src.main.routes.record_labels import record_labels_bp
+from src.main.routes.musics import music_bp
+from src.main.routes.artists import artists_bp
+from src.main.routes.customers import customers_bp
 
-from infra.db.settings.connection import DBConnectionHandler
-from infra.db.settings.base import Base
+from src.infra.db.settings.connection import DBConnectionHandler
+from src.infra.db.settings.base import Base
 
 database = DBConnectionHandler()
 try:
@@ -22,5 +22,5 @@ try:
     app.register_blueprint(artists_bp)
     
 except:
-    print("\n\n\n\n\nBanco de dados desconectado ...... \n\n\n\n\n")
+    print("\nBanco de dados desconectado...")
 

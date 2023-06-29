@@ -1,6 +1,6 @@
 from flask import Blueprint
-from infra.db.settings.connection import DBConnectionHandler
-from services.customer_service import CustomerService
+from src.infra.db.settings.connection import DBConnectionHandler
+from src.services.customer_service import CustomerService
 
 database = DBConnectionHandler()
 database.__enter__()

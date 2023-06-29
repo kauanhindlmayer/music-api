@@ -1,5 +1,5 @@
-from infra.db.settings.base import Base
-from sqlalchemy import Column, Integer, String, TIMESTAMP, ForeignKey
+from src.infra.db.settings.base import Base
+from sqlalchemy import Column, Integer, TIMESTAMP
 from datetime import datetime
 
 class Payment(Base):

@@ -1,8 +1,7 @@
-from infra.db.settings.base import Base
+from src.infra.db.settings.base import Base
 from sqlalchemy import Column, Integer, String, TIMESTAMP, ForeignKey
 from sqlalchemy.orm import relationship
 from datetime import datetime
-from infra.db.entities.genre import Genre 
 
 class Music(Base):
     __tablename__ = 'musics'

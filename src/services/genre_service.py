@@ -1,4 +1,4 @@
-from infra.db.entities.genre import Genre
+from src.infra.db.entities.genre import Genre
 from datetime import datetime
 from flask import request, jsonify
 from sqlalchemy.exc import IntegrityError

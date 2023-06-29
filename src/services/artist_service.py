@@ -1,8 +1,8 @@
-from infra.db.entities.artist import Artist
+from src.infra.db.entities.artist import Artist
 from datetime import datetime
 from flask import request, jsonify
 from sqlalchemy.exc import IntegrityError
-from infra.db.entities.record_label import RecordLabel
+from src.infra.db.entities.record_label import RecordLabel
 
 
 class ArtistService:

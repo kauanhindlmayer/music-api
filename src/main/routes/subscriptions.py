@@ -1,6 +1,6 @@
 from flask import Blueprint
-from infra.db.settings.connection import DBConnectionHandler
-from services.subscription_service import SubcriptionService
+from src.infra.db.settings.connection import DBConnectionHandler
+from src.services.subscription_service import SubcriptionService
 
 database = DBConnectionHandler()
 database.__enter__()
