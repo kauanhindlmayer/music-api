@@ -1,5 +1,5 @@
-from src.infra.db.entities.customer import Customer
-from src.infra.db.entities.subscription import Subscription
+from src.domain.entities.customer import Customer
+from src.domain.entities.subscription import Subscription
 from sqlalchemy.exc import IntegrityError
 from flask import request, jsonify
 from datetime import datetime
@@ -120,6 +120,6 @@ class CustomerService:
             self.session.close()
         except IntegrityError:
             self.session.rollback()
-            return jsonify({'message': 'Não é possível excluir esse item, está associado a outras tabelas'}),401
+            return jsonify({'message': 'Cannot delete this item, it is associated with other tables'}),401
 
         return jsonify({'message': 'Customer deleted successfully'})

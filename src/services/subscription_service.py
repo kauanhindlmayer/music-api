@@ -1,4 +1,4 @@
-from src.infra.db.entities.subscription import Subscription
+from src.domain.entities.subscription import Subscription
 from datetime import datetime
 from flask import request, jsonify
 from sqlalchemy.exc import IntegrityError
@@ -88,6 +88,6 @@ class SubcriptionService:
             self.session.close()
         except  IntegrityError:
             self.session.rollback()
-            return jsonify({'message': 'Não é possível excluir esse item, está associado a outras tabelas'}),401
+            return jsonify({'message': 'Cannot delete this item, it is associated with other tables'}),401
 
         return jsonify({'message': 'Subscription deleted successfully'})

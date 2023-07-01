@@ -1,8 +1,8 @@
-from src.infra.db.entities.artist import Artist
+from src.domain.entities.artist import Artist
 from datetime import datetime
 from flask import request, jsonify
 from sqlalchemy.exc import IntegrityError
-from src.infra.db.entities.record_label import RecordLabel
+from src.domain.entities.record_label import RecordLabel
 
 
 class ArtistService:
@@ -96,6 +96,6 @@ class ArtistService:
             self.session.close()
         except IntegrityError:
             self.session.rollback()
-            return jsonify({'message': 'Não é possível excluir esse item, está associado a outras tabelas'}),401
+            return jsonify({'message': 'Cannot delete this item, it is associated with other tables'}),401
         
         return jsonify({'message': 'Artist deleted successfully'})

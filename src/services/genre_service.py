@@ -1,4 +1,4 @@
-from src.infra.db.entities.genre import Genre
+from src.domain.entities.genre import Genre
 from datetime import datetime
 from flask import request, jsonify
 from sqlalchemy.exc import IntegrityError
@@ -14,15 +14,15 @@ class GenreService:
             'id': genre.id,
             'description': genre.description,
             'created_at': genre.created_at.strftime('%Y-%m-%d %H:%M:%S'),
-            'modified_at': genre.modified_at.strftime('%Y-%m-%d %H:%M:%S') if genre.modified_at is not None else None
+            'modified_at': genre.modified_at.strftime('%Y-%m-%d %H:%M:%S')
         } for genre in genres])
     
     def add(self):
         data = request.get_json()
         description = data['description']
 
-        genre_founded = self.session.query(Genre).filter_by(description=description).all()
-        if genre_founded:
+        genre_found = self.session.query(Genre).filter_by(description=description).all()
+        if genre_found:
             return jsonify({'error': 'Genre already exists!'}), 404
 
         now = datetime.now()
@@ -38,46 +38,46 @@ class GenreService:
         }), 201
     
     def get_by_id(self, id):
-        genre = self.session.query(Genre).get(id)
+        genre_found = self.session.query(Genre).get(id)
         self.session.close()
-        if genre:
+        if genre_found:
             return jsonify({
-                'id': genre.id,
-                'description': genre.description,
-                'created_at': genre.created_at,
-                'modified_at': genre.modified_at.strftime('%Y-%m-%d %H:%M:%S') if genre.modified_at is not None else None
+                'id': genre_found.id,
+                'description': genre_found.description,
+                'created_at': genre_found.created_at.strftime('%Y-%m-%d %H:%M:%S'),
+                'modified_at': genre_found.modified_at.strftime('%Y-%m-%d %H:%M:%S') 
             })
         else:
-            return jsonify({'error': 'Subscription not found'}), 404
+            return jsonify({'error': 'Genre not found'}), 404
         
     def update(self, id):
         data = request.get_json()
         description = data.get('description')
 
-        genre = self.session.query(Genre).get(id)
+        genre_found = self.session.query(Genre).get(id)
 
-        if not genre:
-            return jsonify({'error': 'Subscription not found'}), 404
+        if not genre_found:
+            return jsonify({'error': 'Genre not found'}), 404
 
-        genre.description = description
-
-        genre.modified_at = datetime.now()
+        genre_found.description = description
+        genre_found.modified_at = datetime.now()
         self.session.commit()
         self.session.close()
 
-        return jsonify({'message': 'Subscription updated successfully'})
+        return jsonify({'message': 'Genre updated successfully'})
     
     def delete(self, id):
-        genre = self.session.query(Genre).get(id)
+        genre_found = self.session.query(Genre).get(id)
 
-        if not genre:
-            return jsonify({'error': 'Subscription not found'}), 404
+        if not genre_found:
+            return jsonify({'error': 'Genre not found'}), 404
+        
         try:
-            self.session.delete(genre)
+            self.session.delete(genre_found)
             self.session.commit()
             self.session.close()
         except IntegrityError:
             self.session.rollback()
-            return jsonify({'message': 'Não é possível excluir esse item, está associado a outras tabelas'}),401
+            return jsonify({'message': 'Cannot delete this item, it is associated with other tables'}),401
         
-        return jsonify({'message': 'Subscription deleted successfully'})
+        return jsonify({'message': 'Genre deleted successfully'})
