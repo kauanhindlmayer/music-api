@@ -1,7 +1,7 @@
 from datetime import datetime
 from flask import request, jsonify
 from typing import List
-from src.infra.db.entities.record_label import RecordLabel
+from src.domain.entities.record_label import RecordLabel
 from sqlalchemy.exc import IntegrityError
 
 class RecordLabelService:

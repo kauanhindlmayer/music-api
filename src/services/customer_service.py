@@ -1,5 +1,5 @@
-from src.infra.db.entities.customer import Customer
-from src.infra.db.entities.subscription import Subscription
+from src.domain.entities.customer import Customer
+from src.domain.entities.subscription import Subscription
 from sqlalchemy.exc import IntegrityError
 from flask import request, jsonify
 from datetime import datetime
