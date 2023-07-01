@@ -5,6 +5,9 @@ from src.domain.entities.record_label import RecordLabel
 from sqlalchemy.exc import IntegrityError
 
 class RecordLabelService:
+    def __init__(self, database):
+        self.session = database.session
+
     def record_label_to_json(self, record_label):
         return {
             'id': record_label.id,
@@ -14,8 +17,6 @@ class RecordLabelService:
             'created_at': record_label.created_at.strftime('%Y-%m-%d %H:%M:%S'),
             'modified_at': record_label.modified_at.strftime('%Y-%m-%d %H:%M:%S')
     }
-    def __init__(self, database):
-        self.session = database.session
 
     def get_all(self):
         record_labels: List[RecordLabel] = self.session.query(RecordLabel).all()
@@ -141,6 +142,6 @@ class RecordLabelService:
             self.session.close()
         except IntegrityError:
             self.session.rollback()
-            return jsonify({'message': 'Não é possível excluir esse item, está associado a outras tabelas'}),401
+            return jsonify({'message': 'Cannot delete this item, it is associated with other tables'}),401
 
         return jsonify({'message': 'Record label deleted successfully'})

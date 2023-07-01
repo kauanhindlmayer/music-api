@@ -1,12 +1,10 @@
 
 from sqlalchemy import delete, desc
-
 from src.domain.entities.music import Music
 from datetime import datetime
 from flask import request, jsonify
 from src.domain.entities.artist import Artist
 from src.domain.entities.customer import Customer
-
 from src.domain.entities.genre import Genre
 from src.domain.entities.music_has_artist import MusicHasArtist
 from src.domain.entities.music_has_customer import MusicHasCustomer

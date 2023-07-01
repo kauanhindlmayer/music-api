@@ -88,6 +88,6 @@ class SubcriptionService:
             self.session.close()
         except  IntegrityError:
             self.session.rollback()
-            return jsonify({'message': 'Não é possível excluir esse item, está associado a outras tabelas'}),401
+            return jsonify({'message': 'Cannot delete this item, it is associated with other tables'}),401
 
         return jsonify({'message': 'Subscription deleted successfully'})
