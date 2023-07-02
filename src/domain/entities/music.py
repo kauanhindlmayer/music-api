@@ -3,6 +3,7 @@ from sqlalchemy import Column, Integer, String, TIMESTAMP, ForeignKey
 from sqlalchemy.orm import relationship
 from datetime import datetime
 
+
 class Music(Base):
     __tablename__ = 'musics'
 
@@ -15,6 +16,5 @@ class Music(Base):
     modified_at = Column(TIMESTAMP, nullable=True)
     genre = relationship("Genre")
 
-    
     def __repr__(self):
         return f"Musics [id={self.id}, name={self.name}]"

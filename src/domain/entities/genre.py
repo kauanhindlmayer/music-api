@@ -2,6 +2,7 @@ from src.infra.db.settings.base import Base
 from sqlalchemy import Column, Integer, String, TIMESTAMP
 from datetime import datetime
 
+
 class Genre(Base):
     __tablename__ = 'genres'
 
@@ -12,4 +13,3 @@ class Genre(Base):
 
     def __repr__(self):
         return f"Genres [id={self.id}, description={self.description}]"
-
