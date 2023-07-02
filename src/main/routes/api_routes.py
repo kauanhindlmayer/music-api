@@ -20,7 +20,6 @@ try:
     app.register_blueprint(record_labels_bp)
     app.register_blueprint(music_bp)
     app.register_blueprint(artists_bp)
-    
+
 except:
     print("\nBanco de dados desconectado...")
-

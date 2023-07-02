@@ -1,7 +1,8 @@
-from src.domain.entities.subscription import Subscription
 from datetime import datetime
 from flask import request, jsonify
 from sqlalchemy.exc import IntegrityError
+from src.domain.entities.subscription import Subscription
+
 
 class SubcriptionService:
     def __init__(self, database):
@@ -17,14 +18,15 @@ class SubcriptionService:
             'limit': subscription.limit,
             'created_at': subscription.created_at.strftime('%Y-%m-%d %H:%M:%S')
         } for subscription in subscriptions])
-    
+
     def add(self):
         data = request.get_json()
         description = data['description']
         value = data['value']
         limit = data['limit']
         created_at = datetime.now()
-        subscription = Subscription(description=description, value=value, limit=limit, created_at=created_at)
+        subscription = Subscription(
+            description=description, value=value, limit=limit, created_at=created_at)
         self.session.add(subscription)
         self.session.commit()
         plan_id = subscription.id
@@ -36,7 +38,7 @@ class SubcriptionService:
             'limit': limit,
             'created_at': created_at.strftime('%Y-%m-%d %H:%M:%S')
         }), 201
-    
+
     def get_by_id(self, id):
         subscription = self.session.query(Subscription).get(id)
         self.session.close()
@@ -51,7 +53,7 @@ class SubcriptionService:
             })
         else:
             return jsonify({'error': 'Subscription not found'}), 404
-        
+
     def update(self, id):
         data = request.get_json()
         description = data.get('description')
@@ -75,7 +77,7 @@ class SubcriptionService:
         self.session.close()
 
         return jsonify({'message': 'Subscription updated successfully'})
-    
+
     def delete(self, id):
         subscription = self.session.query(Subscription).get(id)
 
@@ -86,8 +88,10 @@ class SubcriptionService:
             self.session.delete(subscription)
             self.session.commit()
             self.session.close()
-        except  IntegrityError:
+        except IntegrityError:
             self.session.rollback()
-            return jsonify({'message': 'Cannot delete this item, it is associated with other tables'}),401
+            return jsonify(
+                {'message': 'Cannot delete this item, it is associated with other tables'}
+            ), 401
 
         return jsonify({'message': 'Subscription deleted successfully'})

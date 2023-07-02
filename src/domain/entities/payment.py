@@ -2,6 +2,7 @@ from src.infra.db.settings.base import Base
 from sqlalchemy import Column, Integer, TIMESTAMP
 from datetime import datetime
 
+
 class Payment(Base):
     __tablename__ = 'payments'
 
@@ -12,4 +13,3 @@ class Payment(Base):
 
     def __repr__(self):
         return f"Payments [id={self.id}, payment_date={self.payment_date}]"
- 
