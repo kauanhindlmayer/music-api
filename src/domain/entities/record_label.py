@@ -2,7 +2,6 @@ from src.infra.db.settings.base import Base
 from sqlalchemy import Column, Integer, String, TIMESTAMP
 from datetime import datetime
 
-
 class RecordLabel(Base):
     __tablename__ = 'record_label'
 

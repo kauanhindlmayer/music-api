@@ -151,3 +151,15 @@ BEGIN
 END//
 
 DELIMITER ;
+
+-- Ensure that modified column will always be updated
+DELIMITER //
+
+CREATE TRIGGER artist_modified_trigger
+BEFORE UPDATE ON 'music_api_database'.'artists'
+FOR EACH ROW
+BEGIN
+  SET NEW.modified = CURRENT_TIMESTAMP();
+END//
+
+DELIMITER ;
