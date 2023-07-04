@@ -1,4 +1,4 @@
-from flask import Blueprint, request
+from flask import Blueprint, jsonify, request
 from src.infra.db.settings.connection import DBConnectionHandler
 from src.services.record_label_service import RecordLabelService
 
@@ -31,4 +31,5 @@ def update_record_labels(id):
 
 @record_labels_bp.route('/record-labels/<int:id>', methods=['DELETE'])
 def delete_record_labels(id):
-    return record_label_service.delete(id)
+    body, status = record_label_service.delete(id)
+    return jsonify(body), status

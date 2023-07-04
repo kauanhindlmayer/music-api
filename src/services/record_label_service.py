@@ -139,15 +139,13 @@ class RecordLabelService:
         record_label = self.session.query(RecordLabel).get(id)
 
         if not record_label:
-            return jsonify({'error': 'Record label not found'}), 404
+            return {'error': 'Record label not found'}, 404
         try:
             self.session.delete(record_label)
             self.session.commit()
             self.session.close()
         except IntegrityError:
             self.session.rollback()
-            return jsonify(
-                {'message': 'Cannot delete this item, it is associated with other tables'}
-            ), 401
+            return {'message': 'Cannot delete this item, it is associated with other tables'}, 400
 
-        return jsonify({'message': 'Record label deleted successfully'})
+        return {'message': 'Record label deleted successfully'}, 200

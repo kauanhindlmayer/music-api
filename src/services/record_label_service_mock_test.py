@@ -28,6 +28,13 @@ class DataBaseSessionMock():
                 return record_label
         return None
 
+    def delete(self, search_id):
+        for record_label in self.arr:
+            if record_label.id == search_id:
+                self.arr.remove(record_label);
+                return record_label;
+        return None
+
     def all(self):
         return self.arr;
 
@@ -72,3 +79,25 @@ def test_get_record_label_by_id():
 
     assert type(found_record_label) == dict 
     assert found_record_label["id"] == create_result["id"] 
+
+def test_delete_record_label_by_id():
+    database_mock = DataBaseMock()
+
+    record_label_service = RecordLabelService(database_mock);
+
+    record_label_to_create = {
+        "name": 'Label 1',
+        "contract_value": 1000000,
+        "expire_date": '2023-07-03T00:00:00'
+    }
+
+    create_result, status = record_label_service.add(record_label_to_create);
+    
+    assert isinstance(create_result, dict)
+
+    deleted_record_label, status = record_label_service.delete(create_result["id"]);
+
+    assert isinstance(deleted_record_label, dict)
+
+    assert status == 200
+    assert deleted_record_label["message"] == "Record label deleted successfully"
