@@ -11,7 +11,8 @@ record_labels_bp = Blueprint('record_labels', __name__)
 
 @record_labels_bp.route('/record-labels', methods=['GET'])
 def get_record_labels():
-    return record_label_service.get_all()
+    body, status = record_label_service.get_all()
+    return jsonify(body), status; 
 
 
 @record_labels_bp.route('/record-labels', methods=['POST'])

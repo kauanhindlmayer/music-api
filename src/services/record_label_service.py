@@ -23,7 +23,7 @@ class RecordLabelService:
         record_labels: List[RecordLabel] = self.session.query(
             RecordLabel).all()
         self.session.close()
-        return jsonify([self.convert_record_label_to_json(label) for label in record_labels]), 200
+        return [self.convert_record_label_to_json(label) for label in record_labels], 200
 
     def body_param_error(self, param):
         return {"error": param+" is not valid"}
