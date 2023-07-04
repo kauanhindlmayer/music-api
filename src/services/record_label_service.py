@@ -1,6 +1,6 @@
 from typing import List
 from datetime import datetime
-from flask import request, jsonify
+from flask import jsonify
 from sqlalchemy.exc import IntegrityError
 from src.domain.entities.record_label import RecordLabel
 
@@ -23,7 +23,7 @@ class RecordLabelService:
         record_labels: List[RecordLabel] = self.session.query(
             RecordLabel).all()
         self.session.close()
-        return jsonify([self.convert_record_label_to_json(label) for label in record_labels])
+        return jsonify([self.convert_record_label_to_json(label) for label in record_labels]), 200
 
     def body_param_error(self, param):
         return {"error": param+" is not valid"}
@@ -51,8 +51,7 @@ class RecordLabelService:
             return contract_value, self.body_param_error("contract_value")
         return contract_value, None
 
-    def add(self):
-        data: dict = request.get_json()
+    def add(self, data: dict):
 
         name, name_error_message = self.validate_name(data)
         if not (name) or name_error_message:
@@ -89,7 +88,7 @@ class RecordLabelService:
         self.session.close()
         record_label.id = record_label_id
 
-        return self.convert_record_label_to_json(record_label)
+        return self.convert_record_label_to_json(record_label), 201
 
     def get_by_id(self, id):
         record_label = None
@@ -99,12 +98,11 @@ class RecordLabelService:
         self.session.close()
 
         if record_label:
-            return self.convert_record_label_to_json(record_label)
+            return self.convert_record_label_to_json(record_label), 200
         else:
             return jsonify({'error': 'Record label not found'}), 404
 
-    def update(self, id):
-        data = request.get_json()
+    def update(self, id, data: dict):
         expire_date, expire_date_error_message = self.validate_expire_date(
             data)
         contract_value, contract_value_error_message = self.validate_contract_value(
@@ -135,7 +133,7 @@ class RecordLabelService:
         self.session.commit()
         self.session.close()
 
-        return jsonify({'message': 'Record label updated successfully'})
+        return jsonify({'message': 'Record label updated successfully'}), 200
 
     def delete(self, id):
         record_label = self.session.query(RecordLabel).get(id)
