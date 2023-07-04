@@ -1,4 +1,4 @@
-from flask import Blueprint
+from flask import Blueprint, request
 from src.infra.db.settings.connection import DBConnectionHandler
 from src.services.record_label_service import RecordLabelService
 
@@ -16,7 +16,7 @@ def get_record_labels():
 
 @record_labels_bp.route('/record-labels', methods=['POST'])
 def add_record_label():
-    return record_label_service.add()
+    return record_label_service.add(request.get_json())
 
 
 @record_labels_bp.route('/record-labels/<int:id>', methods=['GET'])
@@ -26,7 +26,7 @@ def get_record_labels_by_id(id):
 
 @record_labels_bp.route('/record-labels/<int:id>', methods=['PUT'])
 def update_record_labels(id):
-    return record_label_service.update(id)
+    return record_label_service.update(id, request.get_json())
 
 
 @record_labels_bp.route('/record-labels/<int:id>', methods=['DELETE'])
